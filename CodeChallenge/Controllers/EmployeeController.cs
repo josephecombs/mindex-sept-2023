@@ -60,6 +60,25 @@ namespace CodeChallenge.Controllers
             return Ok(newEmployee);
         }
 
+        [HttpGet("{id}/reporting-structure", Name = "getReportingStructure")]        
+        public IActionResult GetReportingStructure(String id)
+        {
+            _logger.LogDebug($"Received Reporting Structure get request for '{id}'");
+
+            // Call the GetReportingStructure method from the service layer
+            ReportingStructure reportingStructure = _employeeService.GetReportingStructure(id);
+
+            // If the employee or reporting structure does not exist, return a 404 Not Found status
+            if (reportingStructure == null)
+            {
+                return NotFound();
+            }
+
+            // If everything is successful, return a 200 OK status along with the reporting structure
+            return Ok(reportingStructure);
+        }
+
+
         [HttpGet("all", Name = "getAllEmployees")]  // Explicitly set route to /api/employee/all
         [Route("/api/employees")]  // Override for this specific action to /api/employees
         public IActionResult GetAllEmployees()

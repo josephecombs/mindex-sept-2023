@@ -64,5 +64,43 @@ namespace CodeChallenge.Services
 
             return newEmployee;
         }
+
+        public ReportingStructure GetReportingStructure(string employeeId)
+        {
+            // Fetch the root employee
+            Employee rootEmployee = _employeeRepository.GetById(employeeId);
+
+            // If employee doesn't exist, return null
+            if (rootEmployee == null) return null;
+
+            // Compute the number of reports recursively
+            int numberOfReports = CalculateNumberOfReports(rootEmployee);
+
+            // Return the reporting structure
+            return new ReportingStructure(rootEmployee, numberOfReports);
+        }
+
+        // Recursive function to calculate the number of direct reports
+        private int CalculateNumberOfReports(Employee employee)
+        {
+            // Initialize count with zero for the base case (an employee with no direct reports)
+            int count = 0;
+
+            // If the employee has no direct reports, this will be null or an empty list, and the loop will be skipped
+            if (employee.DirectReports != null)
+            {
+                // Count each direct report and their respective direct reports
+                foreach (Employee directReport in employee.DirectReports)
+                {
+                    // Increment by one for the direct report itself
+                    count++;
+
+                    // Recursively count the direct reports of the direct report
+                    count += CalculateNumberOfReports(directReport);
+                }
+            }
+
+            return count;
+        }
     }
 }
