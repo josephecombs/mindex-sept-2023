@@ -1,4 +1,4 @@
-
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -9,6 +9,7 @@ using CodeCodeChallenge.Tests.Integration.Extensions;
 using CodeCodeChallenge.Tests.Integration.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.Extensions.Logging;
 
 namespace CodeCodeChallenge.Tests.Integration
 {
@@ -83,13 +84,34 @@ namespace CodeCodeChallenge.Tests.Integration
             Assert.AreEqual(expectedLastName, employee.LastName);
         }
 
+                [TestMethod]
+        public void GetEmployeeReportingStructure_Returns_CorrectNumberOfReports()
+        {
+            // Arrange
+            var employeeId = "16a596ae-edd3-4847-99fe-c4518e82c86f"; // John Lennon's ID
+            var expectedNumberOfReports = 4;
+
+            // Execute
+            Console.WriteLine("inside correct number of reports test");
+
+
+            var getRequestTask = _httpClient.GetAsync($"api/employees/{employeeId}/reporting-structure");
+            var response = getRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var reportingStructure = response.DeserializeContent<ReportingStructure>();
+
+            Assert.AreEqual(expectedNumberOfReports, reportingStructure.NumberOfReports);
+        }
+
         [TestMethod]
         public void UpdateEmployee_Returns_Ok()
         {
             // Arrange
             var employee = new Employee()
             {
-                EmployeeId = "03aa1462-ffa9-4978-901b-7c001562cf6f",
+                EmployeeId = "62c1084e-6e34-4630-93fd-9153afb65309",
                 Department = "Engineering",
                 FirstName = "Pete",
                 LastName = "Best",

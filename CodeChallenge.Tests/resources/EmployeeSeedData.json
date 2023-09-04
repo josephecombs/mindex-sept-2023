@@ -12,14 +12,24 @@
       {
         "employeeId": "03aa1462-ffa9-4978-901b-7c001562cf6f"
       }
-    ]
+    ],
+    "compensation": {
+      "employeeId": "16a596ae-edd3-4847-99fe-c4518e82c86f",
+      "salary": 150000,
+      "effectiveDate": "2021-12-31"
+    }
   },
   {
     "employeeId": "b7839309-3348-463b-a7e3-5de1c168beb3",
     "firstName": "Paul",
     "lastName": "McCartney",
     "position": "Developer I",
-    "department": "Engineering"
+    "department": "Engineering",
+    "compensation": {
+      "employeeId": "b7839309-3348-463b-a7e3-5de1c168beb3",
+      "salary": 90000,
+      "effectiveDate": "2021-02-19"
+    }
   },
   {
     "employeeId": "03aa1462-ffa9-4978-901b-7c001562cf6f",
@@ -34,20 +44,35 @@
       {
         "employeeId": "c0c2293d-16bd-4603-8e08-638a9d18b22c"
       }
-    ]
+    ],
+    "compensation": {
+      "employeeId": "03aa1462-ffa9-4978-901b-7c001562cf6f",
+      "salary": 75000,
+      "effectiveDate": "2020-02-29"
+    }
   },
   {
     "employeeId": "62c1084e-6e34-4630-93fd-9153afb65309",
     "firstName": "Pete",
     "lastName": "Best",
     "position": "Developer II",
-    "department": "Engineering"
+    "department": "Engineering",
+    "compensation": {
+      "employeeId": "62c1084e-6e34-4630-93fd-9153afb65309",
+      "salary": 250000,
+      "effectiveDate": "2017-07-01"
+    }
   },
   {
     "employeeId": "c0c2293d-16bd-4603-8e08-638a9d18b22c",
     "firstName": "George",
     "lastName": "Harrison",
     "position": "Developer III",
-    "department": "Engineering"
+    "department": "Engineering",
+    "compensation": {
+      "employeeId": "c0c2293d-16bd-4603-8e08-638a9d18b22c",
+      "salary": 120000,
+      "effectiveDate": "2015-07-01"
+    }
   }
 ]
