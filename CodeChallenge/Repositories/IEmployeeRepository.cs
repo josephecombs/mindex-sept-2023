@@ -12,5 +12,7 @@ namespace CodeChallenge.Repositories
         Employee Remove(Employee employee);
         List<Employee> GetAll();
         Task SaveAsync();
+        void AddCompensation(string id, Compensation compensation);
+        Compensation GetCompensationById(string id);
     }
 }

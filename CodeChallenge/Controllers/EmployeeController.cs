@@ -11,7 +11,7 @@ using CodeChallenge.Models;
 namespace CodeChallenge.Controllers
 {
     [ApiController]
-    [Route("api/employee")]
+    [Route("api/employees")]
     public class EmployeeController : ControllerBase
     {
         private readonly ILogger _logger;
@@ -86,5 +86,41 @@ namespace CodeChallenge.Controllers
             var employees = _employeeService.GetAll();  // Assuming you implement GetAll() in your service
             return Ok(employees);
         }
+
+        // POST endpoint to create a new Compensation for a specific Employee by ID
+        [HttpPost("{id}/compensation")]
+        public IActionResult CreateCompensation(String id, [FromBody] Compensation compensation)
+        {
+            // Assuming you implement a method to validate if the employee exists
+            if (_employeeService.GetById(id) == null)
+            {
+                return NotFound();
+            }
+            
+            var newCompensation = _employeeService.CreateCompensation(id, compensation); // Modified method
+            
+            return CreatedAtRoute("getCompensationById", new { id }, newCompensation);
+        }
+
+        // GET endpoint to retrieve the Compensation for a specific Employee by ID
+        [HttpGet("{id}/compensation", Name = "getCompensationById")]
+        public IActionResult GetCompensationById(String id)
+        {
+            // Assuming you implement a method to validate if the employee exists
+            if (_employeeService.GetById(id) == null)
+            {
+                return NotFound();
+            }
+            
+            var compensation = _employeeService.GetCompensationById(id);
+            
+            if (compensation == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(compensation);
+        }
+
     }
 }

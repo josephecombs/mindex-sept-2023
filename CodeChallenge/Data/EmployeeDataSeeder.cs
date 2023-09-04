@@ -23,6 +23,19 @@ namespace CodeChallenge.Data
             if(!_employeeContext.Employees.Any())
             {
                 List<Employee> employees = LoadEmployees();
+                
+                // Cleanup task for IDs
+                employees.ForEach(e => {
+                    if (e.Compensation != null)
+                    {
+                        Console.WriteLine("Compensation is not null");
+                        Console.WriteLine(e.Compensation.EmployeeId);
+                        // e.Compensation.Id = e.Compensation.EmployeeId; // Assuming Id exists and is relevant
+                        // e.Compensation.Employee = e;
+                    }
+                });
+
+                // Console.WriteLine(JsonConvert.SerializeObject(employees, Formatting.Indented));
                 _employeeContext.Employees.AddRange(employees);
 
                 await _employeeContext.SaveChangesAsync();
@@ -62,6 +75,7 @@ namespace CodeChallenge.Data
                     });
                     employee.DirectReports = referencedEmployees;
                 }
+                
             });
         }
     }

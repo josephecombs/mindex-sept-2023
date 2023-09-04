@@ -46,6 +46,7 @@ namespace CodeChallenge.Config
             services.AddScoped<IEmployeeRepository, EmployeeRespository>();
 
             services.AddControllers();
+            // services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
         }
 
         private void SeedEmployeeDB()

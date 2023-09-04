@@ -80,6 +80,18 @@ namespace CodeChallenge.Services
             return new ReportingStructure(rootEmployee, numberOfReports);
         }
 
+        public Compensation CreateCompensation(string id, Compensation compensation)
+        {
+            _employeeRepository.AddCompensation(id, compensation);
+            _employeeRepository.SaveAsync().Wait();
+            return compensation;
+        }
+
+        public Compensation GetCompensationById(string id)
+        {
+            return _employeeRepository.GetCompensationById(id);
+        }
+
         // Recursive function to calculate the number of direct reports
         private int CalculateNumberOfReports(Employee employee)
         {

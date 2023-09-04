@@ -29,7 +29,7 @@ namespace CodeChallenge.Repositories
 
         public Employee GetById(string id)
         {
-            var allEmployees = _employeeContext.Employees.Include(e => e.DirectReports).ToList();
+            var allEmployees = _employeeContext.Employees.Include(e => e.DirectReports).Include(e => e.Compensation).ToList();
             return allEmployees.SingleOrDefault(e => e.EmployeeId == id);
         }
 
@@ -46,6 +46,35 @@ namespace CodeChallenge.Repositories
         public Employee Remove(Employee employee)
         {
             return _employeeContext.Remove(employee).Entity;
+        }
+
+        // stuff for Compensation
+        public void AddCompensation(string employeeId, Compensation compensation)
+        {
+            // Here you'd look up the Employee to which this Compensation should be attached.
+            var employee = _employeeContext.Employees.Find(employeeId);
+            if (employee != null)
+            {
+                // If the Employee is found, associate it with the Compensation.
+                compensation.EmployeeId = employeeId;
+                
+                // Add the compensation to the Employee
+                employee.Compensation = compensation;
+                
+                // Or if you're tracking compensations separately, add to the DbSet directly.
+                _employeeContext.Compensation.Add(compensation);
+            }
+            else
+            {
+                // Handle the situation where the Employee was not found,
+                // perhaps throw an exception or return a boolean for success/failure.
+            }
+        }
+
+        public Compensation GetCompensationById(string id)
+        {
+            return _employeeContext.Compensation
+                .SingleOrDefault(c => c.EmployeeId == id);
         }
     }
 }
