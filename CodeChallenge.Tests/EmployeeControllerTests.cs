@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -63,6 +64,113 @@ namespace CodeCodeChallenge.Tests.Integration
             Assert.AreEqual(employee.LastName, newEmployee.LastName);
             Assert.AreEqual(employee.Department, newEmployee.Department);
             Assert.AreEqual(employee.Position, newEmployee.Position);
+        }
+
+        [TestMethod]
+        public void GetEmployeeById_Returns_DirectReports()
+        {
+            // this attribute was broken when code given to me, so write a test enshrining the bug fix
+            // Arrange
+            var employeeId = "16a596ae-edd3-4847-99fe-c4518e82c86f"; // An ID of an employee who has direct reports
+
+            // Execute
+            var getRequestTask = _httpClient.GetAsync($"api/employees/{employeeId}");
+            var response = getRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var employee = response.DeserializeContent<Employee>();
+
+            Assert.IsNotNull(employee.DirectReports);
+            Assert.IsTrue(employee.DirectReports.Count > 0);
+        }
+
+        [TestMethod]
+        public void GetEmployees_Returns_EmployeeList()
+        {
+            // Execute
+            var getRequestTask = _httpClient.GetAsync("api/employees");
+            var response = getRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var employees = response.DeserializeContent<List<Employee>>();
+
+            Assert.IsNotNull(employees);
+            Assert.IsTrue(employees.Count > 0);
+        }
+
+        [TestMethod]
+        public void CreateCompensation_Returns_Created()
+        {
+            // Arrange
+            var employeeId = "16a596ae-edd3-4847-99fe-c4518e82c86f"; // An ID of an employee
+            var compensation = new Compensation()
+            {
+                EmployeeId = employeeId,
+                Salary = 70000,
+                EffectiveDate = new DateTime(2022, 1, 1)
+            };
+
+            var requestContent = new JsonSerialization().ToJson(compensation);
+
+            // Execute
+            var postRequestTask = _httpClient.PostAsync($"api/employees/{employeeId}/compensation",
+            new StringContent(requestContent, Encoding.UTF8, "application/json"));
+            var response = postRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
+
+            var newCompensation = response.DeserializeContent<Compensation>();
+            Assert.AreEqual(compensation.EmployeeId, newCompensation.EmployeeId);
+            Assert.AreEqual(compensation.Salary, newCompensation.Salary);
+            Assert.AreEqual(compensation.EffectiveDate, newCompensation.EffectiveDate);
+        }
+
+        [TestMethod]
+        public void GetEmployeeById_Returns_Ok_And_DoesNotReturn_Compensation()
+        {
+            // Arrange
+            var employeeId = "16a596ae-edd3-4847-99fe-c4518e82c86f";
+            var expectedFirstName = "John";
+            var expectedLastName = "Lennon";
+
+            // Execute
+            var getRequestTask = _httpClient.GetAsync($"api/employees/{employeeId}");
+            var response = getRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var employee = response.DeserializeContent<Employee>();
+            Assert.AreEqual(expectedFirstName, employee.FirstName);
+            Assert.AreEqual(expectedLastName, employee.LastName);
+
+            // Check that the 'compensation' attribute does not exist in the response
+            var responseContent = response.Content.ReadAsStringAsync().Result;
+            Assert.IsFalse(responseContent.Contains("compensation"));
+
+            // Check that the 'compensation' attribute does exist in the Employee object
+            var hasCompensation = employee.GetType().GetProperty("Compensation") != null;
+            Assert.IsTrue(hasCompensation);
+        }
+
+        [TestMethod]
+        public void GetEmployeeCompensation_Returns_Compensation()
+        {
+            // Arrange
+            var employeeId = "16a596ae-edd3-4847-99fe-c4518e82c86f"; // An ID of an employee who has a compensation
+
+            // Execute
+            var getRequestTask = _httpClient.GetAsync($"api/employees/{employeeId}/compensation");
+            var response = getRequestTask.Result;
+
+            // Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            var compensation = response.DeserializeContent<Compensation>();
+
+            Assert.AreEqual(employeeId, compensation.EmployeeId);
+            // Add more assertions here to check the other fields of the Compensation object
         }
 
         [TestMethod]
