@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace CodeChallenge.Models
 {
@@ -13,6 +14,9 @@ namespace CodeChallenge.Models
         public String Position { get; set; }
         public String Department { get; set; }
         public List<Employee> DirectReports { get; set; }
+
+        [JsonIgnore]
+
         public Compensation Compensation { get; set; }
 
     }
